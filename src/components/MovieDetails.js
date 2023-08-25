@@ -7,7 +7,7 @@ const KEY = "f86addd7";
 
 export default function MovieDetails({
   selectedId,
-  onCloseMovie,
+  // onCloseMovie,
   onAddWatched,
   watched,
 }) {
@@ -45,24 +45,24 @@ export default function MovieDetails({
     };
 
     onAddWatched(newWatchedMovie);
-    onCloseMovie();
+    // onCloseMovie();
   }
 
-  useEffect(
-    function () {
-      function callBack(e) {
-        if (e.code === "Escape") {
-          onCloseMovie();
-        }
-      }
+  // useEffect(
+  //   function () {
+  //     function callBack(e) {
+  //       if (e.code === "Escape") {
+  //         // onCloseMovie();
+  //       }
+  //     }
 
-      document.addEventListener("keydown", callBack);
-      return function () {
-        document.removeEventListener("keydown", callBack);
-      };
-    },
-    [onCloseMovie]
-  );
+  //     document.addEventListener("keydown", callBack);
+  //     return function () {
+  //       document.removeEventListener("keydown", callBack);
+  //     };
+  //   },
+  //   [onCloseMovie]
+  // );
 
   useEffect(
     function () {
@@ -93,60 +93,58 @@ export default function MovieDetails({
   );
 
   return (
-    <div className="details">
-      {isLoading ? (
-        <Loader />
-      ) : (
-        <>
-          <header>
-            <button className="btn-back" onClick={onCloseMovie}>
-              &larr;
-            </button>
-            <img src={poster} alt={`Poster of ${movie} movie`} />
-            <div className="details-overview">
-              <h2>{title}</h2>
-              <p>
-                {released} &bull; {runtime}
-              </p>
-              <p>{genre}</p>
-              <p>
-                <span>⭐</span>
-                <strong>{imdbRating}</strong> IMDb rating
-              </p>
-            </div>
-          </header>
-          <section>
-            <div className="rating">
-              {!isWatched ? (
-                <>
-                  <StarRating
-                    maxRating={10}
-                    size={24}
-                    onSetRating={setUserRating}
-                    defaultRating={userRating}
-                  />
-                  {userRating > 0 && (
-                    <button className="btn-add" onClick={handleAdd}>
-                      + Add to list
-                    </button>
-                  )}
-                </>
-              ) : (
-                <>
-                  <p>
-                    You rated this movie {watchedUserRating} <span>⭐</span>
-                  </p>
-                </>
+    <>
+      <header>
+        <img
+          src={poster}
+          alt={`Poster of ${movie} movie`}
+          className="h-[240px] object-cover flex items-center m-auto md:ms-0"
+        />
+        <div className="details-overview">
+          <h2 className="text-white font-bold text-xl mt-2">{title}</h2>
+          <p className="text-gray-400 text-sm">
+            {released} &bull; {runtime}
+          </p>
+          <p className="text-gray-400 text-sm">{genre}</p>
+          <p className="text-gray-400 text-sm mt-2">
+            <span>⭐ </span>
+            <strong>{imdbRating}</strong> IMDb rating
+          </p>
+        </div>
+      </header>
+      <section>
+        <div className="rating my-4">
+          {!isWatched ? (
+            <>
+              <StarRating
+                maxRating={10}
+                size={24}
+                onSetRating={setUserRating}
+                defaultRating={userRating}
+              />
+              {userRating > 0 && (
+                <button
+                  className="btn-add text-center bg-gray-400 rounded-md justify-center py-1 px-2 m-auto mt-2 flex"
+                  onClick={handleAdd}
+                >
+                  + Add to list
+                </button>
               )}
-            </div>
-            <p>
-              <em>{plot}</em>
-            </p>
-            <p>Starring: {actors}</p>
-            <p>{`Directed by ${director}`}</p>
-          </section>
-        </>
-      )}
-    </div>
+            </>
+          ) : (
+            <>
+              <p className="text-gray-300">
+                You rated this movie {watchedUserRating} <span>⭐</span>
+              </p>
+            </>
+          )}
+        </div>
+        <p className="text-gray-300 max-w-prose mb-2">
+          <em>{plot}</em>
+        </p>
+        <p className="text-gray-400">Starring: {actors}</p>
+        <p className="text-gray-400">{`Directed by ${director}`}</p>
+      </section>
+    </>
   );
 }

@@ -4,16 +4,18 @@ import Loader from "./components/Loader";
 import NavBar from "./components/Navbar";
 import Logo from "./components/Logo";
 import Search from "./components/Search";
-import SearchResults from "./components/SearchResults";
+// import SearchResults from "./components/SearchResults";
 import Box from "./components/reusable/Box";
 import MovieList from "./components/MovieList";
 import MovieDetails from "./components/MovieDetails";
 import WatchedList from "./components/WatchedList";
 import WatchedSummary from "./components/WatchedSummary";
+import Modal from "./components/Modal";
 
 const KEY = "f86addd7";
 
 export default function App() {
+  const [openModal, setOpenModal] = useState(false);
   const [query, setQuery] = useState("");
   const [movies, setMovies] = useState([]);
   const [watched, setWatched] = useState(() => {
@@ -37,6 +39,7 @@ export default function App() {
 
   function handleSelectMovie(id) {
     setSelectedId((selectedId) => (id === selectedId ? null : id));
+    setOpenModal(true);
   }
 
   function handleCloseMovie() {
@@ -97,13 +100,33 @@ export default function App() {
 
   return (
     <div className="max-w-5xl min-h-screen bg-[#404040]">
+      <Modal
+        btnContent={"cancel"}
+        open={openModal}
+        onClose={() => setOpenModal(false)}
+        isLoading={isLoading}
+      >
+        {/* {isLoading ? (
+          <Loader />
+        ) : ( */}
+        {selectedId && (
+          <MovieDetails
+            selectedId={selectedId}
+            // onCloseMovie={handleCloseMovie}
+            onAddWatched={handleAddWatched}
+            watched={watched}
+          />
+        )}
+
+        {/* )} */}
+      </Modal>
       <NavBar>
         <Logo />
       </NavBar>
       <Main>
         <>
           <Search query={query} setQuery={setQuery} />
-          <SearchResults movies={movies} />
+          {/* <SearchResults movies={movies} /> */}
           {isLoading && <Loader />}
           {!isLoading && !error && (
             <MovieList movies={movies} onSelectMovie={handleSelectMovie} />
@@ -111,7 +134,7 @@ export default function App() {
           {error && <ErrorMessage message={error} />}
           {/* {isLoading ? <Loader /> : <MovieList movies={movies} />}*/}
         </>
-        <Box>
+        {/* <Box>
           {selectedId ? (
             <MovieDetails
               selectedId={selectedId}
@@ -121,7 +144,6 @@ export default function App() {
             />
           ) : (
             <>
-              {" "}
               <WatchedSummary watched={watched} />
               <WatchedList
                 watched={watched}
@@ -129,7 +151,7 @@ export default function App() {
               />
             </>
           )}
-        </Box>
+        </Box> */}
       </Main>
     </div>
   );

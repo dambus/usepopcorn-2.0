@@ -16,3 +16,33 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.loader-container {
+  width: 100%;
+  height: 85vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* position: fixed; */
+  background: rgba(0, 0, 0, 0.534);
+  z-index: 1;
+  overflow-y: hidden;
+}
+
+.spinner {
+  width: 64px;
+  height: 64px;
+  border: 12px solid;
+  border-color: #6741d9 transparent #7950f2 transparent;
+  border-radius: 50%;
+  animation: spin-anim 1.2s linear infinite;
+}
+
+@keyframes spin-anim {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
