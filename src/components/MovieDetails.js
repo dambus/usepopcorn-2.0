@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import StarRating from "./reusable/StarRating";
-import Loader from "./Loader";
 // import { KEY } from "./Vars";
 
 const KEY = "f86addd7";
@@ -10,10 +9,13 @@ export default function MovieDetails({
   // onCloseMovie,
   onAddWatched,
   watched,
+  error,
+  setError,
+  setMovieIsLoading,
 }) {
   const [movie, setMovie] = useState({});
-  const [isLoading, setIsLoading] = useState(false);
   const [userRating, setUserRating] = useState(0);
+  // const [error, setError] = useState("");
 
   const isWatched = watched.map((movie) => movie.imdbID).includes(selectedId);
   const watchedUserRating = watched.find(
@@ -48,34 +50,39 @@ export default function MovieDetails({
     // onCloseMovie();
   }
 
-  // useEffect(
-  //   function () {
-  //     function callBack(e) {
-  //       if (e.code === "Escape") {
-  //         // onCloseMovie();
-  //       }
-  //     }
-
-  //     document.addEventListener("keydown", callBack);
-  //     return function () {
-  //       document.removeEventListener("keydown", callBack);
-  //     };
-  //   },
-  //   [onCloseMovie]
-  // );
-
   useEffect(
     function () {
+      const controller = new AbortController();
+
       async function getMovieDetails() {
-        setIsLoading(true);
-        const res = await fetch(
-          `https://www.omdbapi.com/?apikey=${KEY}&i=${selectedId}`
-        );
-        const data = await res.json();
-        setMovie(data);
-        setIsLoading(false);
+        try {
+          setMovieIsLoading(true);
+          setError("");
+          const res = await fetch(
+            `https://www.omdbapi.com/?apikey=${KEY}&i=${selectedId}`,
+            { signal: controller.signal }
+          );
+
+          if (!res.ok)
+            throw new Error("something went wrong getting movie data");
+
+          const data = await res.json();
+          if (data.Response === "False") throw new Error("Movie not found");
+          setMovie(data);
+        } catch (err) {
+          setError(err.message);
+          if (err.name !== "AbortError") {
+            setError(err.message);
+          }
+        } finally {
+          setMovieIsLoading(false);
+          setError("");
+        }
       }
       getMovieDetails();
+      return function () {
+        controller.abort();
+      };
     },
     [selectedId]
   );

@@ -4,7 +4,7 @@ export default function Movie({ movie, onSelectMovie }) {
       {/* <img src={movie.Poster} alt={`${movie.Title} poster`} />
       <h3>{movie.Title}</h3>
     */}
-      <figure className="card h-40 bg-[#404040] m-2 flex flex-row">
+      <figure className="card h-40 bg-[#404040] mt-1 mx-1 flex flex-row cursor-pointer">
         <img
           className="max-w-[30%] object-cover"
           src={movie.Poster}

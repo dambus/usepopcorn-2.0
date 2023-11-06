@@ -29,6 +29,7 @@ export default function App() {
   const [selectedId, setSelectedId] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  const [movieIsLoading, setMovieIsLoading] = useState(false);
 
   useEffect(
     function () {
@@ -100,26 +101,29 @@ export default function App() {
 
   return (
     <div className="max-w-5xl min-h-screen bg-[#404040]">
-      <Modal
-        btnContent={"cancel"}
-        open={openModal}
-        onClose={() => setOpenModal(false)}
-        isLoading={isLoading}
-      >
-        {/* {isLoading ? (
-          <Loader />
-        ) : ( */}
-        {selectedId && (
-          <MovieDetails
-            selectedId={selectedId}
-            // onCloseMovie={handleCloseMovie}
-            onAddWatched={handleAddWatched}
-            watched={watched}
-          />
-        )}
+      {/* {movieIsLoading && <Loader />} */}
+      {!movieIsLoading && (
+        <Modal
+          btnContent={"cancel"}
+          open={openModal}
+          onClose={() => setOpenModal(false)}
+          isLoading={isLoading}
+          error={error}
+          movieIsLoading={movieIsLoading}
+        >
+          {selectedId && (
+            <MovieDetails
+              selectedId={selectedId}
+              // onCloseMovie={handleCloseMovie}
+              onAddWatched={handleAddWatched}
+              watched={watched}
+              setMovieIsLoading={setMovieIsLoading}
+              setError={setError}
+            />
+          )}
+        </Modal>
+      )}
 
-        {/* )} */}
-      </Modal>
       <NavBar>
         <Logo />
       </NavBar>
